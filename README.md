@@ -1,4 +1,16 @@
 
+## Load Balancer Tutorial
+
+Elastic Load Balancing works with Amazon EC2 Auto Scaling to distribute incoming traffic across your healthy Amazon EC2 instances. This increases the scalability and availability of your application. You can enable Elastic Load Balancing within multiple Availability Zones to increase the fault tolerance of your applications. In this tutorial, we cover the basics steps for setting up a load-balanced application.
+
+### Launch Template
+From previous tutorial we created a Launch template. Run the following command to remember it's name 
+```shell
+aws ec2 describe-launch-templates
+```
+:pencil2: Copy on your notepad the "LaunchTemplateName", the output looks similar as the following example:
+> "LaunchTemplateName": "TestMyTemplate"
+
 ### VPC
 A virtual private cloud (VPC) is a virtual network dedicated to your AWS account. It is logically isolated from other virtual networks in the AWS Cloud. For this example we will use the default VPC.
 
@@ -7,7 +19,7 @@ Run the following command to find your default VPC details
     aws ec2 describe-vpcs --filters 'Name=tag:Name,Values=default'
 ```
 
-:pencil2: Coopy on your notepad the VpcId,  the output looks similar as the following example:
+:pencil2: Copy on your notepad the VpcId,  the output looks similar as the following example:
 
 > "VpcId": "vpc-0eb0be50ff77cde7c"
 
@@ -20,7 +32,7 @@ aws ec2 describe-subnets --filters "Name=vpc-id,Values=vpc-XXXXXXXXXXXX"
 aws ec2 describe-subnets --filters "Name=vpc-id,Values=vpc-XXXXXXXXXXXX" | grep SubnetId
 ```
 
-Copy in your notepad the result, the output looks similar as the following example
+:pencil2: Copy in your notepad the result, the output looks similar as the following example
 
 >"SubnetId": "subnet-02d89c59871601234",<br />
 >"SubnetId": "subnet-0d2e9c5c6db012345",<br />
@@ -89,13 +101,26 @@ aws autoscaling attach-load-balancer-target-groups --auto-scaling-group-name my-
   --target-group-arns "arn:aws:elasticloadbalancing:us-east-1:137666369442:targetgroup/my-targets/3e562561419f5d1d"
 ```
 
-## Delete 
+# 9. TEST 
+Open a browser with the DNSName (step 6)
+/phpinfo.php
 
+# 10. DELETE
 
+aws autoscaling detach-load-balancer-target-groups --auto-scaling-group-name my-asg \
+  --target-group-arns "arn:aws:elasticloadbalancing:us-east-1:137666369442:targetgroup/my-targets/3889b6927860b760"
+  
+aws autoscaling delete-auto-scaling-group \
+    --auto-scaling-group-name my-asg \
+    --force-delete  
+    
+aws elbv2 delete-load-balancer --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:137666369442:loadbalancer/app/my-load-balanancer/06804a3cabe2cffe
 
 aws elbv2 delete-target-group \
-    --target-group-arn arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067
-
-
+    --target-group-arn "arn:aws:elasticloadbalancing:us-east-1:137666369442:targetgroup/my-targets/3889b6927860b760"
+  
+    
+Make sure all is deleted from the console     
+    
 
  
