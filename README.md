@@ -82,7 +82,19 @@ aws autoscaling create-auto-scaling-group --auto-scaling-group-name my-asg \
   --max-size 4 --min-size 1 --desired-capacity 2
 ```
 
+The following attach-load-balancer-target-groups command attaches a target group to an existing Auto Scaling group.
 
+```shell
+aws autoscaling attach-load-balancer-target-groups --auto-scaling-group-name my-asg \
+  --target-group-arns "arn:aws:elasticloadbalancing:us-east-1:137666369442:targetgroup/my-targets/3e562561419f5d1d"
+```
+
+## Delete 
+
+
+
+aws elbv2 delete-target-group \
+    --target-group-arn arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067
 
 
 
